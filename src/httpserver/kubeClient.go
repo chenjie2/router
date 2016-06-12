@@ -28,7 +28,7 @@ func (thbis *kubeClient) AddDomain(domainName string, servers string) string {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	client := &http.Client{Transport: tr}
-	reqest, _ := http.NewRequest("POST", "https://domain.yysoma.com/upstream/"+domainName, strings.NewReader(servers))
+	reqest, _ := http.NewRequest("POST", *url+"/upstream/"+domainName, strings.NewReader(servers))
 	response, _ := client.Do(reqest)
 	if response.StatusCode == 200 {
 		body, _ := ioutil.ReadAll(response.Body)
@@ -44,7 +44,7 @@ func (this *kubeClient) DelDomain(domainName string) string {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	client := &http.Client{Transport: tr}
-	reqest, _ := http.NewRequest("DELETE", "https://domain.yysoma.com/upstream/"+domainName, nil)
+	reqest, _ := http.NewRequest("DELETE", *url+"/upstream/"+domainName, nil)
 	response, _ := client.Do(reqest)
 	if response.StatusCode == 200 {
 		body, _ := ioutil.ReadAll(response.Body)
@@ -60,7 +60,7 @@ func (this *kubeClient) GetDomains() string {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	client := &http.Client{Transport: tr}
-	resp, err := client.Get("https://domain.yysoma.com/detail")
+	resp, err := client.Get(*url + "/detail")
 	if err != nil {
 		// handle error
 	}

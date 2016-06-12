@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -9,10 +10,15 @@ import (
 	"strings"
 )
 
+var port *string
+var url *string
+
 func main() {
+	port = flag.String("port", "8888", "http server port")
+	url = flag.String("url", "https://domain.yysoma.com", "router url")
 	http.HandleFunc("/api", commandHandler)
 	http.Handle("/", http.FileServer(http.Dir("webui")))
-	http.ListenAndServe(":8888", nil)
+	http.ListenAndServe(":"+*port, nil)
 }
 
 func commandHandler(w http.ResponseWriter, r *http.Request) {
@@ -28,25 +34,7 @@ func commandHandler(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == "POST" {
 		result, _ := ioutil.ReadAll(r.Body)
 		r.Body.Close()
-		//		var f interface{}
 		json.Unmarshal(result, &parameters)
-		//		m := f.(map[string]string{})
-		//		parameters = m
-		//		for k, v := range m {
-		//			switch vv := v.(type) {
-		//			case string:
-		//				fmt.Println(k, "is string", vv)
-		//				parameters[k] = strings.Join(v, "")
-		//			case int:
-		//				fmt.Println(k, "is int", vv)
-		//				parameters[k] = strings.Join(v, "")
-		//			case float64:
-		//				fmt.Println(k, "is float64", vv)
-		//				parameters[k] = strings.Join(v, "")
-		//			default:
-		//				fmt.Println(k, "is of a type I don't know how to handle")
-		//			}
-		//		}
 	}
 	commandName := parameters["command"]
 	if commandName == "" {
